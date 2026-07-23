@@ -1,6 +1,6 @@
 # OptiSave Mobile 🩺
 
-App móvil de **administración para doctores**, al estilo Doctoralia. El doctor
+App móvil de **administración para doctores**, El doctor
 se registra y su **ficha profesional** queda lista para ser visible en OptiSave;
 desde la app gestiona su **status, agenda, pacientes, opiniones y analíticas**,
 con acceso directo al CRM completo en [optisave.app](https://optisave.app).
