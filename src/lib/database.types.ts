@@ -5,6 +5,8 @@
 
 export type ReviewStatus = 'pending' | 'approved' | 'rejected';
 
+export type CitaStatus = 'pendiente' | 'confirmada' | 'cancelada' | 'completada';
+
 type Timestamped = {
   created_at: string;
   updated_at: string;
@@ -153,11 +155,56 @@ export interface Database {
         };
         Update: Partial<Database['public']['Tables']['resenas']['Insert']>;
       };
+      pacientes: {
+        Row: {
+          id: string;
+          doctor_id: string;
+          full_name: string;
+          birth_date: string | null;
+          phone: string;
+          email: string | null;
+        } & Timestamped;
+        Insert: {
+          id?: string;
+          doctor_id: string;
+          full_name: string;
+          birth_date?: string | null;
+          phone: string;
+          email?: string | null;
+        };
+        Update: Partial<Database['public']['Tables']['pacientes']['Insert']>;
+      };
+      citas: {
+        Row: {
+          id: string;
+          doctor_id: string;
+          paciente_id: string;
+          servicio_id: string | null;
+          sede_id: string | null;
+          fecha: string;
+          hora_inicio: string;
+          hora_fin: string;
+          status: CitaStatus;
+        } & Timestamped;
+        Insert: {
+          id?: string;
+          doctor_id: string;
+          paciente_id: string;
+          servicio_id?: string | null;
+          sede_id?: string | null;
+          fecha: string;
+          hora_inicio: string;
+          hora_fin: string;
+          status?: CitaStatus;
+        };
+        Update: Partial<Database['public']['Tables']['citas']['Insert']>;
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
     Enums: {
       review_status: ReviewStatus;
+      cita_status: CitaStatus;
     };
   };
 }

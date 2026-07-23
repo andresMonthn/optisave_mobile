@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { openBrowserAsync } from 'expo-web-browser';
 import { StyleSheet, View } from 'react-native';
 
@@ -22,30 +21,27 @@ export default function OptisaveAppScreen() {
   const hasLicense = !!doctor?.hasCrmLicense;
 
   return (
-    <Screen header={<ScreenHeader subtitle="Plataforma clínica" title="OptiSave App" />}>
-      <Card padding={0} tone="strong">
-        <Image source={require('@/assets/images/baner.png')} style={styles.hero} contentFit="cover" />
-        <View style={styles.heroBody}>
-          <Image source={require('@/assets/images/Optisave_LgL-noBg.png')} style={styles.logo} contentFit="contain" />
-          <ThemedText variant="h2">OptiSave App</ThemedText>
-          <ThemedText variant="body" color="textSecondary">
-            {hasLicense
-              ? 'Tu licencia CRM está activa. Gestiona citas reales, expedientes y facturación desde la plataforma completa.'
-              : 'El directorio gratuito te da visibilidad. OptiSave App es el CRM de pago con agenda real, expediente clínico e inventario.'}
-          </ThemedText>
-          <Chip
-            label={hasLicense ? 'Licencia activa' : 'Sin licencia CRM'}
-            icon={hasLicense ? 'checkmark-circle' : 'information-circle-outline'}
-            tone={hasLicense ? 'success' : 'info'}
-          />
-        </View>
+    <Screen header={<ScreenHeader subtitle="Plataforma clínica" title="OptiSave CRM" />}>
+      <Card padding={Spacing.lg} tone="strong" contentStyle={styles.intro}>
+        <ThemedText variant="h2">OptiSave CRM</ThemedText>
+        <ThemedText variant="body" color="textSecondary">
+          {hasLicense
+            ? 'Tu licencia está activa. Gestiona expediente clínico, inventario y facturación en la plataforma completa.'
+            : 'El directorio gratuito te da visibilidad. OptiSave CRM es el producto de pago para operar tu consultorio a escala.'}
+        </ThemedText>
+        <Chip
+          label={hasLicense ? 'Licencia activa' : 'Sin licencia CRM'}
+          icon={hasLicense ? 'checkmark-circle' : 'information-circle-outline'}
+          tone={hasLicense ? 'success' : 'info'}
+        />
       </Card>
 
       <Card padding={Spacing.lg} contentStyle={styles.features}>
         {[
-          { icon: 'calendar' as const, title: 'Agenda con citas reales', desc: 'Pacientes reservan en línea' },
           { icon: 'document-text-outline' as const, title: 'Expediente clínico', desc: 'Historial, recetas y notas' },
-          { icon: 'cash-outline' as const, title: 'Facturación e inventario', desc: 'Operación completa del consultorio' },
+          { icon: 'people-outline' as const, title: 'Importación de pacientes', desc: 'Escala tu base existente' },
+          { icon: 'stats-chart-outline' as const, title: 'Analytics', desc: 'Métricas de tu práctica' },
+          { icon: 'shield-checkmark' as const, title: 'NOM-024', desc: 'Privacidad y auditoría documental' },
         ].map((f) => (
           <View key={f.title} style={styles.featureRow}>
             <View style={[styles.featureIcon, { backgroundColor: colors.primarySoft }]}>
@@ -62,30 +58,19 @@ export default function OptisaveAppScreen() {
       </Card>
 
       {hasLicense ? (
-        <Button
-          label="Abrir OptiSave App"
-          iconRight="open-outline"
-          fullWidth
-          onPress={() => openBrowserAsync(CRM_URL)}
-        />
+        <Button label="Abrir OptiSave CRM" iconRight="open-outline" fullWidth onPress={() => openBrowserAsync(CRM_URL)} />
       ) : (
         <>
-          <Card padding={Spacing.lg} tone="strong" contentStyle={styles.landing}>
-            <ThemedText variant="callout">Potencia tu consulta con OptiSave App</ThemedText>
-            <ThemedText variant="small" color="textSecondary">
-              Conecta tu perfil del directorio con el CRM completo: agenda agendable, expedientes y analíticas de tu
-              práctica.
-            </ThemedText>
-          </Card>
+          <ThemedText variant="body" color="textSecondary">
+            Cuando tu consultorio crezca, el CRM conecta con tu perfil del directorio para una operación clínica
+            oportuna.
+          </ThemedText>
           <Button
             label="Ver planes y precios"
             iconRight="open-outline"
             fullWidth
             onPress={() => openBrowserAsync(PRICING_URL)}
           />
-          <ThemedText variant="caption" color="textMuted" style={styles.note}>
-            Se abrirá optisave.app en tu navegador.
-          </ThemedText>
         </>
       )}
     </Screen>
@@ -93,19 +78,8 @@ export default function OptisaveAppScreen() {
 }
 
 const styles = StyleSheet.create({
-  hero: {
-    width: '100%',
-    height: 120,
-  },
-  heroBody: {
-    padding: Spacing.lg,
+  intro: {
     gap: Spacing.sm,
-    alignItems: 'flex-start',
-  },
-  logo: {
-    width: 160,
-    height: 48,
-    marginBottom: Spacing.xs,
   },
   features: {
     gap: Spacing.lg,
@@ -125,11 +99,5 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1,
     gap: 2,
-  },
-  landing: {
-    gap: Spacing.sm,
-  },
-  note: {
-    textAlign: 'center',
   },
 });

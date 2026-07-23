@@ -6,6 +6,51 @@ import type { IconName } from '@/components/ui/icon';
 
 export type UUID = string;
 
+export type CitaStatus = 'pendiente' | 'confirmada' | 'cancelada' | 'completada';
+
+/** Patient record (tabla `pacientes`). */
+export interface Paciente {
+  id: UUID;
+  doctorId: UUID;
+  fullName: string;
+  birthDate?: string;
+  phone: string;
+  email?: string;
+  createdAt: string;
+}
+
+/** Booked appointment (tabla `citas` + join `pacientes`). */
+export interface Cita {
+  id: UUID;
+  patientId?: UUID;
+  patientName: string;
+  patientPhone?: string;
+  patientBirthDate?: string;
+  serviceId?: UUID;
+  serviceName: string;
+  sedeId?: UUID;
+  /** YYYY-MM-DD — columna `fecha` en BD. */
+  fecha?: string;
+  /** HH:MM — columnas `hora_inicio` / `hora_fin` en BD. */
+  horaInicio?: string;
+  horaFin?: string;
+  /** Derivado de fecha + hora para la UI del calendario. */
+  startsAt: string;
+  endsAt?: string | null;
+  status: CitaStatus;
+  createdAt: string;
+}
+
+/** In-app notification (plan gratis — sin push nativo automatizado). */
+export interface AppNotification {
+  id: UUID;
+  title: string;
+  body: string;
+  citaId?: UUID;
+  createdAt: string;
+  read: boolean;
+}
+
 export interface Especialidad {
   id: UUID;
   name: string;

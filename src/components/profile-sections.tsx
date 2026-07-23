@@ -21,9 +21,11 @@ export function HeroCard({ doctor }: { doctor: Doctor }) {
 
   return (
     <Card padding={0} tone="strong">
-      <View style={styles.cover}>
-        <Image source={require('@/assets/images/baner.png')} style={StyleSheet.absoluteFill} contentFit="cover" />
-        <LinearGradient colors={['transparent', 'rgba(0,0,0,0.55)']} style={StyleSheet.absoluteFill} />
+      <View style={[styles.cover, { backgroundColor: colors.primarySoft }]}>
+        <LinearGradient
+          colors={[colors.primarySoft, colors.backgroundAlt]}
+          style={StyleSheet.absoluteFill}
+        />
       </View>
 
       <View style={styles.heroBody}>

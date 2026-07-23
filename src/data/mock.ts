@@ -2,7 +2,20 @@
  * Local mock dataset — used when Supabase env vars are not set.
  */
 
-import type { Doctor, Review, SpecialtyOption } from '@/types';
+import type { Cita, Doctor, Review, SpecialtyOption } from '@/types';
+
+function atToday(hour: number, minute = 0): string {
+  const d = new Date();
+  d.setHours(hour, minute, 0, 0);
+  return d.toISOString();
+}
+
+function atTomorrow(hour: number, minute = 0): string {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  d.setHours(hour, minute, 0, 0);
+  return d.toISOString();
+}
 
 export const SPECIALTY_OPTIONS: SpecialtyOption[] = [
   { id: 'sp-cardio', name: 'Cardiología', icon: 'heart-outline' },
@@ -60,10 +73,12 @@ export const MOCK_DOCTOR: Doctor = {
     },
   ],
   schedule: [
-    { id: 'sch-1', weekday: 1, start: '09:00', end: '14:00', locationName: 'Consultorio Polanco' },
+    { id: 'sch-1', weekday: 1, start: '10:00', end: '14:00', locationName: 'Consultorio Polanco' },
+    { id: 'sch-1b', weekday: 1, start: '16:00', end: '20:00', locationName: 'Consultorio Polanco' },
     { id: 'sch-2', weekday: 2, start: '09:00', end: '14:00', locationName: 'Consultorio Polanco' },
-    { id: 'sch-3', weekday: 3, start: '09:00', end: '14:00', locationName: 'Consultorio Polanco' },
-    { id: 'sch-4', weekday: 4, start: '09:00', end: '14:00', locationName: 'Consultorio Polanco' },
+    { id: 'sch-2b', weekday: 2, start: '16:00', end: '19:00', locationName: 'Consultorio Polanco' },
+    { id: 'sch-3', weekday: 3, start: '10:00', end: '14:00', locationName: 'Consultorio Polanco' },
+    { id: 'sch-4', weekday: 4, start: '10:00', end: '14:00', locationName: 'Consultorio Polanco' },
     { id: 'sch-5', weekday: 5, start: '09:00', end: '13:00', locationName: 'Consultorio Polanco' },
   ],
   ratingAvg: 4.8,
@@ -87,5 +102,56 @@ export const MOCK_REVIEWS: Review[] = [
     rating: 5,
     comment: 'Puntual, profesional y muy amable.',
     createdAt: new Date(Date.now() - 12 * 86400000).toISOString(),
+  },
+];
+
+export const MOCK_CITAS: Cita[] = [
+  {
+    id: 'cita-1',
+    patientName: 'Laura Méndez',
+    patientPhone: '5512345678',
+    patientBirthDate: '1990-05-12',
+    serviceId: 'svc-1',
+    serviceName: 'Consulta de primera vez',
+    startsAt: atToday(10, 30),
+    endsAt: atToday(11, 15),
+    status: 'confirmada',
+    createdAt: new Date(Date.now() - 3600000).toISOString(),
+  },
+  {
+    id: 'cita-2',
+    patientName: 'Carlos Ruiz',
+    patientPhone: '5587654321',
+    patientBirthDate: '1985-11-03',
+    serviceId: 'svc-2',
+    serviceName: 'Consulta de seguimiento',
+    startsAt: atToday(11, 30),
+    endsAt: atToday(12, 0),
+    status: 'pendiente',
+    createdAt: new Date(Date.now() - 1800000).toISOString(),
+  },
+  {
+    id: 'cita-3',
+    patientName: 'Ana Torres',
+    patientPhone: '5599887766',
+    patientBirthDate: '2001-02-18',
+    serviceId: 'svc-1',
+    serviceName: 'Consulta de primera vez',
+    startsAt: atToday(16, 30),
+    endsAt: atToday(17, 15),
+    status: 'confirmada',
+    createdAt: new Date(Date.now() - 7200000).toISOString(),
+  },
+  {
+    id: 'cita-4',
+    patientName: 'Roberto Sánchez',
+    patientPhone: '5544332211',
+    patientBirthDate: '1978-08-25',
+    serviceId: 'svc-2',
+    serviceName: 'Consulta de seguimiento',
+    startsAt: atTomorrow(10, 0),
+    endsAt: atTomorrow(10, 30),
+    status: 'pendiente',
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
   },
 ];

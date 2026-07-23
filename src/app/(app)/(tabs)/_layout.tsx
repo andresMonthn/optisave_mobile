@@ -19,7 +19,7 @@ type TabDef = {
 };
 
 const TABS: TabDef[] = [
-  { name: 'dashboard', href: '/dashboard' as Href, label: 'Panel', icon: 'grid-outline', activeIcon: 'grid' },
+  { name: 'agenda', href: '/agenda' as Href, label: 'Agenda', icon: 'calendar-outline', activeIcon: 'calendar' },
   { name: 'profile', href: '/profile' as Href, label: 'Perfil', icon: 'person-outline', activeIcon: 'person' },
   {
     name: 'patient-view',

@@ -3,7 +3,8 @@
  */
 
 import type { Database } from '@/lib/database.types';
-import type { Clinic, Doctor, Especialidad, Review, ScheduleSlot, Service } from '@/types';
+import type { Cita, Clinic, Doctor, Especialidad, Paciente, Review, ScheduleSlot, Service } from '@/types';
+import { citaRowToStartsAt } from '@/utils/citas-db';
 
 type Tables = Database['public']['Tables'];
 
@@ -100,6 +101,46 @@ export function mapReview(r: Tables['resenas']['Row']): Review {
     reviewerName: r.reviewer_name,
     rating: r.rating,
     comment: r.comment ?? undefined,
+    createdAt: r.created_at,
+  };
+}
+
+type CitaRowJoined = Tables['citas']['Row'] & {
+  pacientes?: Pick<Tables['pacientes']['Row'], 'full_name' | 'birth_date' | 'phone'> | null;
+  servicios?: { name: string } | null;
+  sedes?: { name: string } | null;
+};
+
+export function mapPaciente(r: Tables['pacientes']['Row']): Paciente {
+  return {
+    id: r.id,
+    doctorId: r.doctor_id,
+    fullName: r.full_name,
+    birthDate: r.birth_date ?? undefined,
+    phone: r.phone,
+    email: r.email ?? undefined,
+    createdAt: r.created_at,
+  };
+}
+
+export function mapCita(r: CitaRowJoined): Cita {
+  const startsAt = citaRowToStartsAt(r.fecha, r.hora_inicio);
+  const endsAt = citaRowToStartsAt(r.fecha, r.hora_fin);
+  return {
+    id: r.id,
+    patientId: r.paciente_id,
+    patientName: r.pacientes?.full_name ?? 'Paciente',
+    patientPhone: r.pacientes?.phone,
+    patientBirthDate: r.pacientes?.birth_date ?? undefined,
+    serviceId: r.servicio_id ?? undefined,
+    serviceName: r.servicios?.name ?? 'Consulta',
+    sedeId: r.sede_id ?? undefined,
+    fecha: r.fecha,
+    horaInicio: r.hora_inicio.slice(0, 5),
+    horaFin: r.hora_fin.slice(0, 5),
+    startsAt,
+    endsAt,
+    status: r.status,
     createdAt: r.created_at,
   };
 }

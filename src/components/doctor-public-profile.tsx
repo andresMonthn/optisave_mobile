@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 
 import { ReviewCard } from '@/components/review-card';
@@ -21,11 +20,11 @@ type Props = {
   doctor: Doctor;
   reviews?: Review[];
   preview?: boolean;
+  bookable?: boolean;
 };
 
-export function DoctorPublicProfile({ doctor, reviews = [], preview }: Props) {
+export function DoctorPublicProfile({ doctor, reviews = [], preview, bookable }: Props) {
   const { colors } = useTheme();
-  const primaryService = doctor.services.find((s) => s.isActive);
 
   return (
     <>
@@ -90,7 +89,10 @@ export function DoctorPublicProfile({ doctor, reviews = [], preview }: Props) {
 
       {doctor.schedule.length ? (
         <View style={styles.section}>
-          <SectionHeader title="Horarios de atención" subtitle="Informativos — no reservables desde el directorio" />
+          <SectionHeader
+            title="Horarios de atención"
+            subtitle={bookable ? 'Elige un horario al agendar tu cita' : undefined}
+          />
           <ScheduleView slots={doctor.schedule} />
         </View>
       ) : null}
@@ -124,10 +126,6 @@ export function DoctorPublicProfile({ doctor, reviews = [], preview }: Props) {
           </ThemedText>
         </Card>
       ) : null}
-
-      {primaryService ? null : (
-        <Image source={require('@/assets/images/baner.png')} style={styles.banner} contentFit="cover" />
-      )}
     </>
   );
 }
@@ -164,10 +162,5 @@ const styles = StyleSheet.create({
   },
   hiddenNotice: {
     alignItems: 'center',
-  },
-  banner: {
-    width: '100%',
-    height: 120,
-    borderRadius: 16,
   },
 });

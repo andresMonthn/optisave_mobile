@@ -83,7 +83,6 @@ export function GlassSurface({
             <BlurView
               intensity={intensity ?? Glass.blurIntensity}
               tint={isDark ? 'dark' : 'light'}
-              blurMethod="dimezisBlurView"
               style={StyleSheet.absoluteFill}
             />
             <View style={[StyleSheet.absoluteFill, { backgroundColor: overlayColor }]} />

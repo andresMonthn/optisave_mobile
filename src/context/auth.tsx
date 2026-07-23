@@ -15,6 +15,7 @@ import {
 } from 'react';
 
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { isJwtClockSkewError } from '@/lib/auth-errors';
 import { DoctorService } from '@/services';
 import type { Doctor } from '@/types';
 
@@ -67,7 +68,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
       const d = await DoctorService.getCurrent(uid);
       setDoctor(d);
     } catch (e) {
-      console.warn('[auth] loadDoctor failed', e);
+      if (isJwtClockSkewError(e) && supabase) {
+        console.warn('[auth] session clock skew — signing out', e);
+        await supabase.auth.signOut();
+        setSession(null);
+      } else {
+        console.warn('[auth] loadDoctor failed', e);
+      }
       setDoctor(null);
     } finally {
       setLoadingDoctor(false);
@@ -83,8 +90,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
     async function boot() {
       if (supabase) {
-        const { data } = await supabase.auth.getSession();
-        if (active) setSession(data.session);
+        const { data, error } = await supabase.auth.getSession();
+        if (error && isJwtClockSkewError(error)) {
+          await supabase.auth.signOut();
+          if (active) setSession(null);
+        } else if (active) {
+          setSession(data.session);
+        }
       } else {
         const raw = await AsyncStorage.getItem(MOCK_SESSION_KEY);
         if (active && raw) {
@@ -121,6 +133,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const signIn = useCallback<AuthContextValue['signIn']>(async (emailArg, password) => {
     if (supabase) {
       const { error } = await supabase.auth.signInWithPassword({ email: emailArg, password });
+      if (error && isJwtClockSkewError(error)) {
+        return {
+          error:
+            'La hora del dispositivo no coincide con el servidor. Activa fecha y hora automáticas en el emulador e intenta de nuevo.',
+        };
+      }
       return { error: error?.message };
     }
     await AsyncStorage.setItem(MOCK_SESSION_KEY, JSON.stringify({ email: emailArg }));
